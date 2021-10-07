@@ -14,11 +14,16 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText etFile;
     private Button btSave;
     private Button btRead;
+    private Button color;
+    private int mDefaultColor;
     private static final String FILE_NAME = "texto.txt";
 
     @Override
@@ -31,10 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private void setUpView(){
         etFile = findViewById(R.id.etFile);
         btSave = findViewById(R.id.btSave);
+        color = findViewById(R.id.color);
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveFile();
+                //saveFile();
             }
         });
         btRead = findViewById(R.id.btRead);
@@ -44,15 +50,22 @@ public class MainActivity extends AppCompatActivity {
                 readFile();
             }
         });
+        color.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openColorPicker();
+            }
+        });
+
     }
 
-    private void saveFile(){
-        String textoASalvar = etFile.getText().toString();
+    private void saveFile(String datos){
+      //  String datos = etFile.getText().toString();
         FileOutputStream fileOutputStream = null;
 
         try {
             fileOutputStream = openFileOutput(FILE_NAME, MODE_PRIVATE);
-            fileOutputStream.write(textoASalvar.getBytes());
+            fileOutputStream.write(datos.getBytes());
             Log.d("TAG1", "Fichero Salvado en: " + getFilesDir() + "/" + FILE_NAME);
         }catch (Exception e){
             e.printStackTrace();
@@ -90,5 +103,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+    public void openColorPicker() {
+        AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(this, mDefaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+
+            }
+
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int color) {
+                mDefaultColor = color;
+             //   System.out.println(mDefaultColor);
+                saveFile(Integer.toHexString(mDefaultColor));
+                readFile();
+               // mLayout.setBackgroundColor(mDefaultColor);
+            }
+        });
+        colorPicker.show();
     }
 }
