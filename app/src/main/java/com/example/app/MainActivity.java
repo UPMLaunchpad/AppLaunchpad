@@ -1,7 +1,9 @@
 package com.example.app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.AutomaticZenRule;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -9,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.ParcelUuid;
 import android.util.Log;
@@ -17,14 +20,19 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,14 +47,15 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 1;
     private static final UUID MY_UUID = null;
     private static final String TAG = null;
+    private static final int REQUEST_CODE = 200;
     public static BluetoothAdapter bluetoothAdapter;
     private EditText etFile;
     private Button sendF;
     private Button btRead;
     private Button color;
     private int mDefaultColor;
-    private static final String FILE_NAME = "texto.txt";
-    String path;
+       String direccion = getApplicationContext() + "/configuracion.txt";
+    File fich = new File(direccion);
 
 
 
@@ -55,8 +64,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        this.solicitarPermisos();
+        this.configurarBluetooth();
         this.setUpView();
+
     }
+
+    private void solicitarPermisos() {
+    int PermisoLectura = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+    int PermisoEscritura = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    int PermisoLocalizacion = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+    int PermisoAdmin = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN);
+    int PermisoBluetooth = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH);
+
+    if (PermisoLectura == PackageManager.PERMISSION_GRANTED && PermisoEscritura == PackageManager.PERMISSION_GRANTED && PermisoAdmin == PackageManager.PERMISSION_GRANTED && PermisoBluetooth == PackageManager.PERMISSION_GRANTED && PermisoLocalizacion == PackageManager.PERMISSION_GRANTED) {
+
+        Toast.makeText(this, "Permisos concedidos", Toast.LENGTH_SHORT).show();
+    } else{
+        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.BLUETOOTH_ADMIN,Manifest.permission.BLUETOOTH},REQUEST_CODE);
+    }
+
+
+    }
+
+
     private void setUpView(){
         etFile = findViewById(R.id.etFile);
         sendF = findViewById(R.id.SendFile);
@@ -89,10 +120,41 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveFile(String datos){ //MODIFICAR PARA GUARDAR EN EL MISMO FICHERO
       //  String datos = etFile.getText().toString();
-        FileOutputStream fileOutputStream = null;
 
+        FileOutputStream fileOutputStream = null;
+        if(!fich.exists()){
+            try {
+                fich.createNewFile();
+            } catch (IOException e) {
+                Log.e(TAG, "Error statusFile" + e.getMessage());
+            }
+        }
+        FileWriter flwriter = null;
         try {
-            fileOutputStream = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            flwriter = new FileWriter(direccion, true);
+            BufferedWriter bfwriter = new BufferedWriter(flwriter);
+
+                //escribe los datos en el archivo
+                bfwriter.write(datos + "\n");
+
+            bfwriter.close();
+        //    System.out.println("Archivo modificado satisfactoriamente..");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (flwriter != null) {
+                try {
+                    flwriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+/*
+        try {
+            fileOutputStream = openFileOutput(fich);
             fileOutputStream.write(datos.getBytes());
             Log.d("TAG1", "Fichero Salvado en: " + getFilesDir() + "/" + FILE_NAME);
         }catch (Exception e){
@@ -106,13 +168,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        path= String.valueOf(getFilesDir());
+        path= String.valueOf(getFilesDir());*/
+
     }
 
+
     private void readFile(){
-        FileInputStream fileInputStream = null;
+        String linea ="";
+        Scanner scanner;
+        scanner = new Scanner(direccion);
+        while (scanner.hasNextLine()) {
+             linea = scanner.nextLine();
+
+        }
+
+        scanner.close();
+        etFile.setText(linea);
+
+
+       /* FileInputStream fileInputStream = null;
         try{
-            fileInputStream = openFileInput(FILE_NAME);
+            fileInputStream = openFileInput(direccion);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String lineaTexto;
@@ -132,11 +208,11 @@ public class MainActivity extends AppCompatActivity {
                 }catch (Exception e){
 
                 }
-            }
+            }*/
         }
 
 
-    }
+
     public void openColorPicker() {
         AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(this, mDefaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
@@ -148,10 +224,11 @@ public class MainActivity extends AppCompatActivity {
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 mDefaultColor = color;
              //   System.out.println(mDefaultColor);
-             //   saveFile(Integer.toHexString(mDefaultColor));
+             //   saveFile(getApplicationContext(),Integer.toHexString(mDefaultColor));
+                guadarColor(Integer.toHexString(mDefaultColor));
                 readFile();
 
-               guadarColor(RGBtoHSL(Integer.toHexString(mDefaultColor)));
+
 
                // mLayout.setBackgroundColor(mDefaultColor);
             }
@@ -159,8 +236,15 @@ public class MainActivity extends AppCompatActivity {
         colorPicker.show();
     }
 
-    private void guadarColor(float[] rgBtoHSL) {
-
+    private void guadarColor(String RGB) {
+            this.saveFile(HSLtoString(RGBtoHSL(RGB)));
+    }
+    public String HSLtoString(float[] hsl){
+        String HSL = "";
+      for(int x=0;x< hsl.length;x++){
+          HSL = HSL+ " " + String.valueOf(hsl[x]);
+        }
+      return HSL;
     }
 
     public float[] RGBtoHSL (String Hex) {
