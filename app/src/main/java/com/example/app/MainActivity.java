@@ -48,22 +48,28 @@ public class MainActivity extends AppCompatActivity {
     private static final UUID MY_UUID = null;
     private static final String TAG = null;
     private static final int REQUEST_CODE = 200;
-    public static BluetoothAdapter bluetoothAdapter;
+
+
     private EditText etFile;
     private Button sendF;
-    private Button btRead;
     private Button color;
-    private int mDefaultColor;
-       String direccion = getApplicationContext() + "/configuracion.txt";
-    File fich = new File(direccion);
+    public static BluetoothAdapter bluetoothAdapter;
 
+    private int mDefaultColor;
+    String direccion = getApplicationContext() + "/configuracion.txt";
+    File fich = new File(direccion);
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("hola");
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        etFile = findViewById(R.id.etFile);
+        sendF = findViewById(R.id.SendFile);
+        color = findViewById(R.id.color);
         this.solicitarPermisos();
         this.configurarBluetooth();
         this.setUpView();
@@ -71,28 +77,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void solicitarPermisos() {
-    int PermisoLectura = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-    int PermisoEscritura = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-    int PermisoLocalizacion = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-    int PermisoAdmin = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN);
-    int PermisoBluetooth = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH);
+        int PermisoLectura = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int PermisoEscritura = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int PermisoLocalizacion = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int PermisoAdmin = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN);
+        int PermisoBluetooth = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH);
 
-    if (PermisoLectura == PackageManager.PERMISSION_GRANTED && PermisoEscritura == PackageManager.PERMISSION_GRANTED && PermisoAdmin == PackageManager.PERMISSION_GRANTED && PermisoBluetooth == PackageManager.PERMISSION_GRANTED && PermisoLocalizacion == PackageManager.PERMISSION_GRANTED) {
+        if (PermisoLectura == PackageManager.PERMISSION_GRANTED && PermisoEscritura == PackageManager.PERMISSION_GRANTED && PermisoAdmin == PackageManager.PERMISSION_GRANTED && PermisoBluetooth == PackageManager.PERMISSION_GRANTED && PermisoLocalizacion == PackageManager.PERMISSION_GRANTED) {
 
-        Toast.makeText(this, "Permisos concedidos", Toast.LENGTH_SHORT).show();
-    } else{
-        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.BLUETOOTH_ADMIN,Manifest.permission.BLUETOOTH},REQUEST_CODE);
+            Toast.makeText(this, "Permisos concedidos", Toast.LENGTH_SHORT).show();
+        } else {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.BLUETOOTH}, REQUEST_CODE);
+        }
+
+
     }
 
 
-    }
+    private void setUpView() {
 
-
-    private void setUpView(){
-        etFile = findViewById(R.id.etFile);
-        sendF = findViewById(R.id.SendFile);
-        color = findViewById(R.id.color);
-      /*  btSave.setOnClickListener(new View.OnClickListener() {
+        /*  btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -118,11 +122,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void saveFile(String datos){ //MODIFICAR PARA GUARDAR EN EL MISMO FICHERO
-      //  String datos = etFile.getText().toString();
+    private void saveFile(String datos) { //MODIFICAR PARA GUARDAR EN EL MISMO FICHERO
+        //  String datos = etFile.getText().toString();
 
         FileOutputStream fileOutputStream = null;
-        if(!fich.exists()){
+        if (!fich.exists()) {
             try {
                 fich.createNewFile();
             } catch (IOException e) {
@@ -134,11 +138,11 @@ public class MainActivity extends AppCompatActivity {
             flwriter = new FileWriter(direccion, true);
             BufferedWriter bfwriter = new BufferedWriter(flwriter);
 
-                //escribe los datos en el archivo
-                bfwriter.write(datos + "\n");
+            //escribe los datos en el archivo
+            bfwriter.write(datos + "\n");
 
             bfwriter.close();
-        //    System.out.println("Archivo modificado satisfactoriamente..");
+            //    System.out.println("Archivo modificado satisfactoriamente..");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -173,12 +177,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void readFile(){
-        String linea ="";
+    private void readFile() {
+        String linea = "";
         Scanner scanner;
         scanner = new Scanner(direccion);
         while (scanner.hasNextLine()) {
-             linea = scanner.nextLine();
+            linea = scanner.nextLine();
 
         }
 
@@ -209,8 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }*/
-        }
-
+    }
 
 
     public void openColorPicker() {
@@ -223,39 +226,50 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 mDefaultColor = color;
-             //   System.out.println(mDefaultColor);
-             //   saveFile(getApplicationContext(),Integer.toHexString(mDefaultColor));
-                guadarColor(Integer.toHexString(mDefaultColor));
+                //   System.out.println(mDefaultColor);
+                //   saveFile(getApplicationContext(),Integer.toHexString(mDefaultColor));
+                guardarColor(Integer.toHexString(mDefaultColor));
                 readFile();
 
 
-
-               // mLayout.setBackgroundColor(mDefaultColor);
+                // mLayout.setBackgroundColor(mDefaultColor);
             }
         });
         colorPicker.show();
     }
 
-    private void guadarColor(String RGB) {
-            this.saveFile(HSLtoString(RGBtoHSL(RGB)));
+    private void guardarColor(String RGB) {
+        this.saveFile(HSLtoString(HSLtoHSLEsp(RGBtoHSL(RGB))));
     }
-    public String HSLtoString(float[] hsl){
+
+    public float[] HSLtoHSLEsp(float[] hsl){
+
+        float[] hslEsp= new float[3];
+        hslEsp[0]=(hsl[0]*255)/360;
+        hslEsp[1]=(hsl[1]*255)/100;
+        hslEsp[0]=(hsl[2]*255)/100;
+
+
+        return hslEsp;
+    }
+
+    public String HSLtoString(float[] hsl) {
         String HSL = "";
-      for(int x=0;x< hsl.length;x++){
-          HSL = HSL+ " " + String.valueOf(hsl[x]);
+        for (int x = 0; x < hsl.length; x++) {
+            HSL = HSL + " " + String.valueOf(hsl[x]);
         }
-      return HSL;
+        return HSL;
     }
 
-    public float[] RGBtoHSL (String Hex) {
+    public float[] RGBtoHSL(String Hex) {
 
-        float r=16*conversor(Hex.charAt(2))+conversor(Hex.charAt(3));
-        float g=16*conversor(Hex.charAt(4))+conversor(Hex.charAt(5));
-        float b=16*conversor(Hex.charAt(6))+conversor(Hex.charAt(7));
+        float r = 16 * conversor(Hex.charAt(2)) + conversor(Hex.charAt(3));
+        float g = 16 * conversor(Hex.charAt(4)) + conversor(Hex.charAt(5));
+        float b = 16 * conversor(Hex.charAt(6)) + conversor(Hex.charAt(7));
 
-        float [] hsl = new float[3];
+        float[] hsl = new float[3];
 
-        for (int i = 0 ; i < 3 ; i++) {
+        for (int i = 0; i < 3; i++) {
             hsl[i] = 0;
         }
 
@@ -263,8 +277,8 @@ public class MainActivity extends AppCompatActivity {
         g = g / 255;
         b = b / 255;
 
-        float cmax = Math.max(r,Math.max(g,b));
-        float cmin = Math.min(r,Math.min(g,b));
+        float cmax = Math.max(r, Math.max(g, b));
+        float cmin = Math.min(r, Math.min(g, b));
 
         float dif = cmax - cmin;
 
@@ -272,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
             hsl[0] = 0;
 
         } else if (cmax == r) {
-            hsl[0] = ((g - b) / dif ) % 6;
+            hsl[0] = ((g - b) / dif) % 6;
 
         } else if (cmax == g) {
             hsl[0] = (b - r) / dif + 2;
@@ -286,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
 
         hsl[2] = dif / 2;
 
-        if(hsl[0] < 0){
+        if (hsl[0] < 0) {
             hsl[0] += 360;
         }
 
@@ -303,10 +317,11 @@ public class MainActivity extends AppCompatActivity {
         return hsl;
 
     }
-    public float conversor(char c){
-        char[] con= {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-        for(int x=0;x<con.length;x++){
-            if(c==con[x]){
+
+    public float conversor(char c) {
+        char[] con = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        for (int x = 0; x < con.length; x++) {
+            if (c == con[x]) {
                 return (float) x;
             }
         }
@@ -314,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void configurarBluetooth(){
+    public void configurarBluetooth() {
       bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             System.out.println("El dispositivo no tiene bluetooth");
@@ -333,4 +348,4 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-}
+    }
