@@ -56,15 +56,18 @@ public class MainActivity extends AppCompatActivity {
     public static BluetoothAdapter bluetoothAdapter;
 
     private int mDefaultColor;
-    String direccion = getApplicationContext() + "/configuracion.txt";
-    File fich = new File(direccion);
+
+
+   private File fich;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("hola");
         super.onCreate(savedInstanceState);
+        File cache = getCacheDir();
 
+        fich =   new File(cache, "/configuracion.txt");
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         etFile = findViewById(R.id.etFile);
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         }
         FileWriter flwriter = null;
         try {
-            flwriter = new FileWriter(direccion, true);
+            flwriter = new FileWriter(fich, true);
             BufferedWriter bfwriter = new BufferedWriter(flwriter);
 
             //escribe los datos en el archivo
@@ -177,10 +180,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void readFile() {
+    private void readFile() throws FileNotFoundException {
         String linea = "";
         Scanner scanner;
-        scanner = new Scanner(direccion);
+        scanner = new Scanner(fich);
         while (scanner.hasNextLine()) {
             linea = scanner.nextLine();
 
@@ -229,7 +232,11 @@ public class MainActivity extends AppCompatActivity {
                 //   System.out.println(mDefaultColor);
                 //   saveFile(getApplicationContext(),Integer.toHexString(mDefaultColor));
                 guardarColor(Integer.toHexString(mDefaultColor));
-                readFile();
+                try {
+                    readFile();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
 
 
                 // mLayout.setBackgroundColor(mDefaultColor);
@@ -333,6 +340,7 @@ public class MainActivity extends AppCompatActivity {
       bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             System.out.println("El dispositivo no tiene bluetooth");
+            return;
         }
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
