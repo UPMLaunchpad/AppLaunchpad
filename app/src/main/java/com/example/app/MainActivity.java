@@ -1,13 +1,11 @@
 package com.example.app;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.AutomaticZenRule;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
@@ -17,27 +15,18 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -54,17 +43,20 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 200;
 
 
-    private EditText etFile;
+
     private Button sendF;
     private Button color;
     private Button cambiar;
+
     public static BluetoothAdapter bluetoothAdapter;
     private BluetoothSocket btSocket = null;
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     private int mDefaultColor;
+   
 
 
    private File fich;
+
 
 
     @Override
@@ -76,10 +68,11 @@ public class MainActivity extends AppCompatActivity {
         fich =   new File(cache, "/configuracion.txt");
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        etFile = findViewById(R.id.etFile);
+
         sendF = findViewById(R.id.SendFile);
         color = findViewById(R.id.color);
         cambiar = findViewById(R.id.cambiar);
+
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
         this.solicitarPermisos();
@@ -136,7 +129,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
               MyBluetoothService bluetooh = new MyBluetoothService();
-              bluetooh.inicar(btSocket);
+
+                try {
+                    bluetooh.iniciar(btSocket,StringtoBytes(readFile()));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
             }
 
         });
@@ -148,7 +147,11 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
     }
+
+
+
     private void nuevaVentana(View view){
         Intent in = new Intent(this, SeleccionBoton.class);
         startActivity(in);
@@ -207,19 +210,26 @@ public class MainActivity extends AppCompatActivity {
         path= String.valueOf(getFilesDir());*/
 
     }
+    private byte[] StringtoBytes(String st){
+        byte[] bytes = st.getBytes();
+        return bytes;
+    }
 
-
-    private void readFile() throws FileNotFoundException {
+    private String readFile() throws FileNotFoundException {
         String linea = "";
         Scanner scanner;
+        String conf = "";
         scanner = new Scanner(fich);
         while (scanner.hasNextLine()) {
             linea = scanner.nextLine();
+            System.out.println(linea);
+            conf+=linea;
 
         }
 
         scanner.close();
-        etFile.setText(linea);
+
+       return conf;
 
 
        /* FileInputStream fileInputStream = null;
@@ -258,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 mDefaultColor = color;
-                //   System.out.println(mDefaultColor);
+                   System.out.println("color:"+ mDefaultColor);
                 //   saveFile(getApplicationContext(),Integer.toHexString(mDefaultColor));
                 guardarColor(Integer.toHexString(mDefaultColor));
                 try {
@@ -283,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
         float[] hslEsp= new float[3];
         hslEsp[0]=(hsl[0]*255)/360;
         hslEsp[1]=(hsl[1]*255)/100;
-        hslEsp[0]=(hsl[2]*255)/100;
+        hslEsp[2]=(hsl[2]*255)/100;
 
 
         return hslEsp;
@@ -429,6 +439,12 @@ public class MainActivity extends AppCompatActivity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device.getName(); System.out.println(deviceName+ " ");
                 String deviceHardwareAddress = device.getAddress();  System.out.println(deviceHardwareAddress);
+                try {
+                    btSocket = createBluetoothSocket(device);
+                } catch (IOException e) {
+                    Toast.makeText(getBaseContext(), "La creacción del Socket fallo", Toast.LENGTH_LONG).show();
+                }
+
             }
         }
     };

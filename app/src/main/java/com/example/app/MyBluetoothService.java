@@ -23,10 +23,12 @@ public class MyBluetoothService {
 
     }
 
-    public void inicar(BluetoothSocket btSocket) {
+    public void iniciar(BluetoothSocket btSocket, byte[] conf) {
         ConnectedThread con = new ConnectedThread(btSocket);
 
-        con.run();
+     //   con.run();
+        con.write(conf);
+
     }
 
 
@@ -39,10 +41,7 @@ public class MyBluetoothService {
 
         // ... (Add other message types here as needed.)
     }
-    public MyBluetoothService(MyBluetoothService context) {
 
-        context = this;
-    }
 
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
