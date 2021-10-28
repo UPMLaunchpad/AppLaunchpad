@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,19 @@ public class MyBluetoothService {
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private Handler handler; // handler that gets info from Bluetooth service
 
+
+
+
+
+    public MyBluetoothService() {
+
+    }
+
+    public void inicar(BluetoothSocket btSocket) {
+        ConnectedThread con = new ConnectedThread(btSocket);
+
+        con.run();
+    }
 
 
     // Defines several constants used when transmitting messages between the
@@ -56,7 +70,27 @@ public class MyBluetoothService {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+
+        try
+
+        {
+            // Connect to the remote device through the socket. This call blocks
+            // until it succeeds or throws an exception.
+            mmSocket.connect();
+        } catch(
+        IOException connectException)
+
+        {
+            // Unable to connect; close the socket and return.
+            try {
+                mmSocket.close();
+            } catch (IOException closeException) {
+                Log.e(TAG, "Could not close the client socket", closeException);
+            }
+            return;
         }
+    }
+
 
         public void run() {
             mmBuffer = new byte[1024];

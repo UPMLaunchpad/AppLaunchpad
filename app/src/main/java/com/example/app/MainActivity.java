@@ -1,5 +1,8 @@
 package com.example.app;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -10,6 +13,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -53,8 +57,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText etFile;
     private Button sendF;
     private Button color;
+    private Button cambiar;
     public static BluetoothAdapter bluetoothAdapter;
-
+    private BluetoothSocket btSocket = null;
+    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     private int mDefaultColor;
 
 
@@ -73,9 +79,14 @@ public class MainActivity extends AppCompatActivity {
         etFile = findViewById(R.id.etFile);
         sendF = findViewById(R.id.SendFile);
         color = findViewById(R.id.color);
+        cambiar = findViewById(R.id.cambiar);
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(receiver, filter);
         this.solicitarPermisos();
-        this.configurarBluetooth();
+
+       this.configurarBluetooth();
         this.setUpView();
+
 
     }
 
@@ -121,8 +132,26 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+        sendF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              MyBluetoothService bluetooh = new MyBluetoothService();
+              bluetooh.inicar(btSocket);
+            }
 
+        });
+        cambiar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nuevaVentana(view);
+            }
 
+        });
+
+    }
+    private void nuevaVentana(View view){
+        Intent in = new Intent(this, SeleccionBoton.class);
+        startActivity(in);
     }
 
     private void saveFile(String datos) { //MODIFICAR PARA GUARDAR EN EL MISMO FICHERO
@@ -338,6 +367,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void configurarBluetooth() {
       bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         if (bluetoothAdapter == null) {
             System.out.println("El dispositivo no tiene bluetooth");
             return;
@@ -347,13 +377,69 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
-        Intent discoverableIntent =
+        bluetoothAdapter.startDiscovery();
+
+
+      /*  Intent discoverableIntent =
                 new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-        startActivity(discoverableIntent);
+        startActivityForResult(discoverableIntent, 1);
+
+
+
+        Intent intent = getIntent();
+
+
+            //     Intent intent = this.registerReceiver(null,new IntentFilter(Intent.ACTION_DOCK_EVENT));
+            //Get the MAC address from the DeviceListActivty via EXTRA
+             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+            //   String deviceName = device.getName();
+            //   String address = device.getAddress();
+
+
+
+
+       try {
+            btSocket = createBluetoothSocket(device);
+        } catch (IOException e) {
+            Toast.makeText(getBaseContext(), "La creacción del Socket fallo", Toast.LENGTH_LONG).show();
+        }
+*/
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
+    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
+
+        return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
+
+    }
+
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                // Discovery has found a device. Get the BluetoothDevice
+                // object and its info from the Intent.
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                String deviceName = device.getName(); System.out.println(deviceName+ " ");
+                String deviceHardwareAddress = device.getAddress();  System.out.println(deviceHardwareAddress);
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+        // Don't forget to unregister the ACTION_FOUND receiver.
+        unregisterReceiver(receiver);
+    }
 
     }
