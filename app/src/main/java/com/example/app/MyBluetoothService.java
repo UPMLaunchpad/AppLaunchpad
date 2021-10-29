@@ -1,35 +1,100 @@
 package com.example.app;
 
 import android.bluetooth.BluetoothAdapter;
+
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.harrysoft.androidbluetoothserial.BluetoothManager;
+import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice;
+import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class MyBluetoothService {
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private Handler handler; // handler that gets info from Bluetooth service
 
+private BluetoothManager bluetoothManager;
+private Context cont;
+private String espMAC = "24:62:AB:F3:00:5A";
+private String message;
 
 
 
 
-    public MyBluetoothService() {
+
+
+
+
+
+    public void iniciar(BluetoothManager mang, String conf, Context main) {
+        bluetoothManager = mang;
+        cont = main;
+        message = conf;
+    this.connectDevice(espMAC);
 
     }
 
-    public void iniciar(BluetoothSocket btSocket, byte[] conf) {
-        ConnectedThread con = new ConnectedThread(btSocket);
+    private SimpleBluetoothDeviceInterface deviceInterface;
 
-     //   con.run();
-        con.write(conf);
-
+    private void connectDevice(String mac) {
+        bluetoothManager.openSerialDevice(mac)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onConnected, this::onError);
     }
+
+    private void onConnected(BluetoothSerialDevice connectedDevice) {
+        // You are now connected to this device!
+        // Here you may want to retain an instance to your device:
+        deviceInterface = connectedDevice.toSimpleDeviceInterface();
+
+        // Listen to bluetooth events
+        deviceInterface.setListeners(this::onMessageReceived, this::onMessageSent, this::onError);
+
+        // Let's send a message:
+    //    deviceInterface.sendMessage("Hello world!");
+        deviceInterface.sendMessage(message);
+    }
+
+    private void onMessageSent(String message) {
+        // We sent a message! Handle it here.
+        Toast.makeText(cont, "Sent a message! Message was: " + message, Toast.LENGTH_LONG).show(); // Replace context with your context instance.
+    }
+
+    private void onMessageReceived(String message) {
+        // We received a message! Handle it here.
+        Toast.makeText(cont, "Received a message! Message was: " + message, Toast.LENGTH_LONG).show(); // Replace context with your context instance.
+    }
+
+    private void onError(Throwable error) {
+        // Handle the error
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // Defines several constants used when transmitting messages between the

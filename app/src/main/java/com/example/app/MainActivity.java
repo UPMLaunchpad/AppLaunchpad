@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -33,6 +34,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.widget.Toast;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
+
+import com.harrysoft.androidbluetoothserial.BluetoothManager;
+import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -52,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothSocket btSocket = null;
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     private int mDefaultColor;
-   
+    private  BluetoothManager bluetoothManager;
+    private Context cont;
+
 
 
    private File fich;
@@ -77,12 +84,31 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(receiver, filter);
         this.solicitarPermisos();
 
-       this.configurarBluetooth();
-        this.setUpView();
+        this.configurarBluetoothSerial();
 
+    //  this.configurarBluetooth();
+        this.setUpView();
+    cont =this;
 
     }
 
+    private void configurarBluetoothSerial() {
+
+         bluetoothManager = BluetoothManager.getInstance();
+        if (bluetoothManager == null) {
+            // Bluetooth unavailable on this device :( tell the user
+            Toast.makeText(this, "Bluetooth not available.", Toast.LENGTH_LONG).show(); // Replace context with your context instance.
+            finish();
+        }
+    //  this.conseguirMacs(bluetoothManager);
+    }
+        private void conseguirMacs(BluetoothManager bluetoothManager){
+            Collection<BluetoothDevice> pairedDevices = bluetoothManager.getPairedDevicesList();
+            for (BluetoothDevice device : pairedDevices) {
+                Log.d("My Bluetooth App", "Device name: " + device.getName());
+                Log.d("My Bluetooth App", "Device MAC Address: " + device.getAddress());
+            }
+        }
     private void solicitarPermisos() {
         int PermisoLectura = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         int PermisoEscritura = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -131,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
               MyBluetoothService bluetooh = new MyBluetoothService();
 
                 try {
-                    bluetooh.iniciar(btSocket,StringtoBytes(readFile()));
+                    bluetooh.iniciar(bluetoothManager,readFile(),cont);
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -223,12 +250,12 @@ public class MainActivity extends AppCompatActivity {
         while (scanner.hasNextLine()) {
             linea = scanner.nextLine();
             System.out.println(linea);
-            conf+=linea;
+            conf+=linea+"\n";
 
         }
 
         scanner.close();
-
+        conf+="-";
        return conf;
 
 
@@ -375,49 +402,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void configurarBluetooth() {
-      bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        if (bluetoothAdapter == null) {
-            System.out.println("El dispositivo no tiene bluetooth");
-            return;
-        }
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-
-        bluetoothAdapter.startDiscovery();
-
-
-      /*  Intent discoverableIntent =
-                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-        startActivityForResult(discoverableIntent, 1);
-
-
-
-        Intent intent = getIntent();
-
-
-            //     Intent intent = this.registerReceiver(null,new IntentFilter(Intent.ACTION_DOCK_EVENT));
-            //Get the MAC address from the DeviceListActivty via EXTRA
-             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-            //   String deviceName = device.getName();
-            //   String address = device.getAddress();
-
-
-
-
-       try {
-            btSocket = createBluetoothSocket(device);
-        } catch (IOException e) {
-            Toast.makeText(getBaseContext(), "La creacción del Socket fallo", Toast.LENGTH_LONG).show();
-        }
-*/
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
