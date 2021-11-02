@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         if (bluetoothManager == null) {
             // Bluetooth unavailable on this device :( tell the user
             Toast.makeText(this, "Bluetooth not available.", Toast.LENGTH_LONG).show(); // Replace context with your context instance.
-            finish();
+          //  finish();
         }
     //  this.conseguirMacs(bluetoothManager);
     }

@@ -19,19 +19,19 @@ public class SeleccionBoton extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seleccion_boton);
-        prueba = findViewById(R.id.coco);
+      //  prueba = findViewById(R.id.coco);
         this.setUpView();
     }
 
     private void setUpView() {
 
-        prueba.setOnClickListener(new View.OnClickListener() {
+     /*   prueba.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println("Esta unidad tiene alma?");
             }
 
-        });
+        });*/
     }
 
 

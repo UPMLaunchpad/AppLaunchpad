@@ -7,21 +7,87 @@
     android:layout_height="match_parent"
     tools:context=".SeleccionBoton">
 
+    <TextView
+        android:id="@+id/Titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="300dp"
+        android:layout_marginEnd="278dp"
+        android:layout_marginBottom="150dp"
+        android:text="Seleccione un cuadrante"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.089" />
+
     <ImageButton
-        android:id="@+id/coco"
-        android:layout_width="112dp"
-        android:layout_height="124dp"
-        android:layout_marginStart="231dp"
-        android:layout_marginTop="118dp"
-        android:layout_marginEnd="388dp"
-        android:layout_marginBottom="169dp"
+        android:id="@+id/Cuadrante2"
+        android:layout_width="126dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginEnd="239dp"
+        android:layout_marginBottom="2dp"
+        android:cropToPadding="false"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/Cuadrante4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/Cuadrante1"
+        app:layout_constraintTop_toBottomOf="@+id/Titulo"
+        app:srcCompat="@drawable/cuadrante" />
+
+    <ImageButton
+        android:id="@+id/Cuadrante1"
+        android:layout_width="126dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="239dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        android:cropToPadding="false"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/Cuadrante3"
+        app:layout_constraintEnd_toStartOf="@+id/Cuadrante2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Titulo"
+        app:srcCompat="@drawable/cuadrante" />
+
+    <ImageButton
+        android:id="@+id/Cuadrante4"
+        android:layout_width="126dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="239dp"
+        android:layout_marginBottom="52dp"
         android:cropToPadding="false"
         android:padding="1dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Cuadrante3"
+        app:layout_constraintTop_toBottomOf="@+id/Cuadrante2"
+        app:srcCompat="@drawable/cuadrante" />
+
+    <ImageButton
+        android:id="@+id/Cuadrante3"
+        android:layout_width="126dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="239dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="52dp"
+        android:cropToPadding="false"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/Cuadrante4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/coconut" />
+        app:layout_constraintTop_toBottomOf="@+id/Cuadrante1"
+        app:srcCompat="@drawable/cuadrante" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
