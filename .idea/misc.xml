@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Robert/StudioProjects/AppLaunchpad/app/src/main/res/layout/activity_boton.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/Robert/StudioProjects/AppLaunchpad/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/Robert/StudioProjects/AppLaunchpad/app/src/main/res/layout/activity_numeroboton.xml" value="0.5" />
         <entry key="..\:/Users/Robert/StudioProjects/AppLaunchpad/app/src/main/res/layout/activity_seleccion_boton.xml" value="0.5" />
       </map>
     </option>

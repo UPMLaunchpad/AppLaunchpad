@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("hola");
+    //    System.out.println("hola");
         super.onCreate(savedInstanceState);
         File cache = getCacheDir();
 
@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
         this.configurarBluetoothSerial();
 
-    //  this.configurarBluetooth();
+
+
         this.setUpView();
     cont =this;
 
