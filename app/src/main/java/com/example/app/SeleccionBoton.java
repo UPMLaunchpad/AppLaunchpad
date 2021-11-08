@@ -3,6 +3,7 @@ package com.example.app;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -24,7 +25,7 @@ public class SeleccionBoton extends AppCompatActivity {
         cuadrante2 = findViewById(R.id.Cuadrante2);
         cuadrante3 = findViewById(R.id.Cuadrante3);
         cuadrante4 = findViewById(R.id.Cuadrante4);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.setUpView();
     }
 

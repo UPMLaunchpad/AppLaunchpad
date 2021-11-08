@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Boton"
+            android:exported="false" />
+        <activity
             android:name=".NumeroBoton"
             android:exported="false" />
         <activity

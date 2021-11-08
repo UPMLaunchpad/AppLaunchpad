@@ -50,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Button sendF;
-    private Button color;
+   // private Button color;
     private Button cambiar;
+
 
     public static BluetoothAdapter bluetoothAdapter;
     private BluetoothSocket btSocket = null;
@@ -77,8 +78,9 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         sendF = findViewById(R.id.SendFile);
-        color = findViewById(R.id.color);
+       // color = findViewById(R.id.color);
         cambiar = findViewById(R.id.cambiar);
+
 
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
@@ -142,23 +144,29 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 readFile();
             }
-        });*/
+        });
 
 
-        color.setOnClickListener(new View.OnClickListener() {
+      color.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openColorPicker();
             }
 
-        });
+        });*/
+
         sendF.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
               MyBluetoothService bluetooh = new MyBluetoothService();
 
                 try {
-                    bluetooh.iniciar(bluetoothManager,readFile(),cont);
+                    if (fich.exists()){
+                        bluetooh.iniciar(bluetoothManager,readFile(),cont);
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "DEBE CONFIGURAR PRIMERO EL TECLADO", Toast.LENGTH_LONG).show();
+                    }
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -185,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(in);
     }
 
-    private void saveFile(String datos) { //MODIFICAR PARA GUARDAR EN EL MISMO FICHERO
+  /*  private void saveFile(String datos) { //MODIFICAR PARA GUARDAR EN EL MISMO FICHERO
         //  String datos = etFile.getText().toString();
 
         FileOutputStream fileOutputStream = null;
@@ -235,15 +243,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        path= String.valueOf(getFilesDir());*/
+        path= String.valueOf(getFilesDir());
 
     }
     private byte[] StringtoBytes(String st){
         byte[] bytes = st.getBytes();
         return bytes;
-    }
+    }*/
 
     private String readFile() throws FileNotFoundException {
+
+
+
         String linea = "";
         Scanner scanner;
         String conf = "";
@@ -285,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
             }*/
     }
 
-
+/*
     public void openColorPicker() {
         AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(this, mDefaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
@@ -401,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return 0;
 
-    }
+    }*/
 
 
     @Override
