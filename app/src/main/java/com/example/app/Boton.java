@@ -228,6 +228,11 @@ public class Boton extends AppCompatActivity {
             }
             bfwriter.write(led + " " + datos + "\n");
 
+            while (scanner.hasNextLine()) {
+                temp = scanner.nextLine();
+                bfwriter.write(temp + "\n");
+            }
+
 
             //escribe los datos en el archivo
             bfwriter.close();

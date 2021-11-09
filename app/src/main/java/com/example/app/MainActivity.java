@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private Button sendF;
    // private Button color;
     private Button cambiar;
-
+    private Button borrar;
 
     public static BluetoothAdapter bluetoothAdapter;
     private BluetoothSocket btSocket = null;
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         sendF = findViewById(R.id.SendFile);
        // color = findViewById(R.id.color);
         cambiar = findViewById(R.id.cambiar);
+        borrar = findViewById(R.id.borrar);
 
 
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -183,6 +184,22 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
+        borrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                    if (fich.exists()){
+                       fich.delete();
+                        Toast.makeText(getApplicationContext(), "Fichero borrado", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "No existe ningun archivo previo", Toast.LENGTH_LONG).show();
+                    }
+
+            }
+
+        });
 
     }
 

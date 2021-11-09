@@ -25,12 +25,12 @@
         android:id="@+id/SendFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="267dp"
-        android:layout_marginTop="66dp"
-        android:text="Mandar configuración"
+        android:layout_marginStart="272dp"
+        android:layout_marginTop="29dp"
+        android:text="Enviar configuración"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cambiar"
+        app:layout_constraintTop_toBottomOf="@+id/borrar"
         tools:visibility="visible" />
 
     <Button
@@ -54,6 +54,16 @@
         app:layout_constraintBottom_toTopOf="@+id/cambiar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/borrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="269dp"
+        android:layout_marginTop="30dp"
+        android:text="Borrar configuración"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cambiar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
