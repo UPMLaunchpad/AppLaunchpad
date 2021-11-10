@@ -1,10 +1,9 @@
 package com.example.app;
 
-import androidx.annotation.RequiresApi;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,14 +11,9 @@ import android.widget.Button;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.LineNumberReader;
-import java.nio.file.Files;
-import java.util.List;
 import java.util.Scanner;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -31,6 +25,7 @@ public class Boton extends AppCompatActivity {
     private int mDefaultColor;
     private File fichero, cache;
     private Button colorBoton;
+    DialogoSonido dialogoSonido;
     private int numLed[] = {0, 1, 2, 3, 4, 5, 6, 7, 15, 14, 13, 12, 11, 10, 9, 8, 16, 17, 18, 19, 20, 21, 22, 23, 31, 30, 29, 28, 27, 26, 25, 26, 32, 33, 34, 35, 36, 37, 38, 39, 47, 46, 45, 44, 43, 42, 41, 40, 48, 49, 50, 51, 52, 53, 54, 55, 63, 62, 61, 60, 59, 58, 57, 56};
 
 
@@ -40,13 +35,27 @@ public class Boton extends AppCompatActivity {
         setContentView(R.layout.activity_boton);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         cache = getCacheDir();
-
+        mDefaultColor= 0;
         fichero = new File(cache, "/configuracion.txt");
         colorBoton = findViewById(R.id.colorBoton);
-
+        dialogoSonido= new DialogoSonido();
         this.obtenerBoton();
         this.setUpView();
+
+
+
     }
+@Override
+public void  onBackPressed(){
+        System.out.println("guardando");
+    try {
+        guardarColor(Integer.toHexString(mDefaultColor));
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+        finish();
+}
+
 
     private void setUpView() {
 
@@ -55,11 +64,22 @@ public class Boton extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 openColorPicker();
+          /*      try {
+                    guardarColor(Integer.toHexString(mDefaultColor));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
+             //   dialogoSonido.show(dialogoSonido);
+
             }
 
         });
 
+
+
     }
+
+
 
     private void obtenerBoton() {
 
@@ -67,6 +87,11 @@ public class Boton extends AppCompatActivity {
         boton = datos.getInt("Numero");
 
     }
+
+
+
+
+
 
 
     public void openColorPicker() {
@@ -81,11 +106,7 @@ public class Boton extends AppCompatActivity {
                 mDefaultColor = color;
                 System.out.println("color:" + mDefaultColor);
                 //   saveFile(getApplicationContext(),Integer.toHexString(mDefaultColor));
-                try {
-                    guardarColor(Integer.toHexString(mDefaultColor));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
 
 
                 // mLayout.setBackgroundColor(mDefaultColor);
