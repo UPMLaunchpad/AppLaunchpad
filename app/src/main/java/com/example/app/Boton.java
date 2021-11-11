@@ -9,12 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -23,9 +26,12 @@ public class Boton extends AppCompatActivity {
     private static final String TAG = null;
     private int boton;
     private int mDefaultColor;
+    private int sonido;
+    private int efecto;
     private File fichero, cache;
     private Button colorBoton;
-    DialogoSonido dialogoSonido;
+    private Button sonidoBoton;
+    private Button efectoBoton;
     private int numLed[] = {0, 1, 2, 3, 4, 5, 6, 7, 15, 14, 13, 12, 11, 10, 9, 8, 16, 17, 18, 19, 20, 21, 22, 23, 31, 30, 29, 28, 27, 26, 25, 26, 32, 33, 34, 35, 36, 37, 38, 39, 47, 46, 45, 44, 43, 42, 41, 40, 48, 49, 50, 51, 52, 53, 54, 55, 63, 62, 61, 60, 59, 58, 57, 56};
 
 
@@ -35,10 +41,14 @@ public class Boton extends AppCompatActivity {
         setContentView(R.layout.activity_boton);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         cache = getCacheDir();
-        mDefaultColor= 0;
+        mDefaultColor= -16777216;
+        sonido =0;
+        efecto =0;
         fichero = new File(cache, "/configuracion.txt");
         colorBoton = findViewById(R.id.colorBoton);
-        dialogoSonido= new DialogoSonido();
+        sonidoBoton = findViewById(R.id.sonidoBoton);
+        efectoBoton = findViewById(R.id.efectoBoton);
+
         this.obtenerBoton();
         this.setUpView();
 
@@ -63,21 +73,33 @@ public void  onBackPressed(){
         colorBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openColorPicker();
-          /*      try {
-                    guardarColor(Integer.toHexString(mDefaultColor));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-             //   dialogoSonido.show(dialogoSonido);
+                    openColorPicker();
+
+            }
+
+        });
+        sonidoBoton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                confgSonido();
 
             }
 
         });
 
 
+        efectoBoton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                confgEfecto();
+
+            }
+
+        });
     }
+
 
 
 
@@ -87,9 +109,56 @@ public void  onBackPressed(){
         boton = datos.getInt("Numero");
 
     }
+    private void confgEfecto() {
+        String items[]  = {"Sin efecto","Efecto 1","Efecto 2"};
+        new MaterialDialog.Builder(this)
+                .title("Elija un efecto")
+                .items(items)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which){
+                            case 1:
+                                efecto =1;
+                                break;
+                            case 2:
+                                efecto = 2;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                })
+                .show();
 
+    }
 
+public void confgSonido (){
+        String items[]  = {"Sonido predeterminado","Sonido 1","Sonido 2","Sonido 3"};
+    new MaterialDialog.Builder(this)
+            .title("Elija un sonido")
+            .items(items)
+            .itemsCallback(new MaterialDialog.ListCallback() {
+                @Override
+                public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                    switch (which){
+                        case 1:
+                            sonido =1;
+                            break;
+                        case 2:
+                            sonido = 2;
+                            break;
+                        case 3:
+                            sonido = 3;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            })
+            .show();
 
+}
 
 
 
@@ -117,7 +186,7 @@ public void  onBackPressed(){
 
 
     private void guardarColor(String RGB) throws IOException {
-        this.saveFile(numeroLed(boton), HSLtoString(HSLtoHSLEsp(RGBtoHSL(RGB))));
+        this.saveFile(numeroLed(boton), HSLtoString(HSLtoHSLEsp(RGBtoHSL(RGB))),sonido,efecto);
     }
 
     private int numeroLed(int boton) {
@@ -213,7 +282,7 @@ public void  onBackPressed(){
     }
 
 
-    private void saveFile(int led, String datos) throws IOException {
+    private void saveFile(int led, String color, int son,int efct) throws IOException {
 
         File file_temp = new File(cache, "temp.txt");
 
@@ -247,7 +316,11 @@ public void  onBackPressed(){
                     bfwriter.write(" \n");
                 }
             }
-            bfwriter.write(led + " " + datos + "\n");
+
+            bfwriter.write(led +","+ son + ","+ efct + "," + color + "\n");
+            if (scanner.hasNextLine()){
+                temp=scanner.nextLine();
+            }
 
             while (scanner.hasNextLine()) {
                 temp = scanner.nextLine();

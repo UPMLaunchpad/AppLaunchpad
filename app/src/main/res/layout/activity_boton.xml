@@ -10,13 +10,29 @@
         android:id="@+id/colorBoton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="347dp"
-        android:layout_marginTop="116dp"
-        android:layout_marginEnd="219dp"
-        android:layout_marginBottom="247dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="84dp"
         android:text="Seleccionar color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/sonidoBoton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="20dp"
+        android:text="Seleccionar Sonido"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorBoton" />
+
+    <Button
+        android:id="@+id/efectoBoton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="20dp"
+        android:text="Seleccione un efecto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sonidoBoton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
