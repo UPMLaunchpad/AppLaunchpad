@@ -110,7 +110,7 @@ public void  onBackPressed(){
 
     }
     private void confgEfecto() {
-        String items[]  = {"Sin efecto","Efecto 1","Efecto 2"};
+        String items[]  = {"Sin efecto","Efecto cuadrado","Efecto cruz","Efecto cruz progresivo"};
         new MaterialDialog.Builder(this)
                 .title("Elija un efecto")
                 .items(items)
@@ -123,6 +123,9 @@ public void  onBackPressed(){
                                 break;
                             case 2:
                                 efecto = 2;
+                                break;
+                            case 3:
+                                efecto = 3;
                                 break;
                             default:
                                 break;
@@ -208,7 +211,7 @@ public void confgSonido (){
     public String HSLtoString(float[] hsl) {
         String HSL = "";
         for (int x = 0; x < hsl.length; x++) {
-            HSL = HSL + " " + String.valueOf(hsl[x]);
+            HSL = HSL + "," + String.valueOf(Math.round(hsl[x]));
         }
         return HSL;
     }
@@ -307,6 +310,7 @@ public void confgSonido (){
         try {
             flwriter = new FileWriter(file_temp, true);
             BufferedWriter bfwriter = new BufferedWriter(flwriter);
+
             for (int x = 0; x < boton; x++) {
 
                 if (scanner.hasNextLine()) {
@@ -317,7 +321,7 @@ public void confgSonido (){
                 }
             }
 
-            bfwriter.write(led +","+ son + ","+ efct + "," + color + "\n");
+            bfwriter.write(led +","+ son + ","+ efct + "," + color +";"+ "\n");
             if (scanner.hasNextLine()){
                 temp=scanner.nextLine();
             }
