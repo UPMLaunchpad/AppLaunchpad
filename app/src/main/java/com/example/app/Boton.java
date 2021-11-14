@@ -321,7 +321,7 @@ public void confgSonido (){
                 }
             }
 
-            bfwriter.write(led +","+ son + ","+ efct + "," + color +";"+ "\n");
+            bfwriter.write(led +","+ son + ","+ efct + color +";"+ "\n");
             if (scanner.hasNextLine()){
                 temp=scanner.nextLine();
             }
