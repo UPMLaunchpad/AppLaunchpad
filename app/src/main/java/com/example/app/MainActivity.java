@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
         scanner = new Scanner(fich);
         while (scanner.hasNextLine()) {
             linea = scanner.nextLine();
-            if(linea ==" ") {
+            if(linea =="") {
                 linea = "64,4,0,0,0,0;";
             }
             System.out.println(linea);

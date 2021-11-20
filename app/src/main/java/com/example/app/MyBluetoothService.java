@@ -70,7 +70,7 @@ private String message;
 
     private void onMessageSent(String message) {
         // We sent a message! Handle it here.
-        Toast.makeText(cont, "Sent a message! Message was: " + message, Toast.LENGTH_LONG).show(); // Replace context with your context instance.
+        Toast.makeText(cont, "Mensaje enviado", Toast.LENGTH_LONG).show(); // Replace context with your context instance.
     }
 
     private void onMessageReceived(String message) {
