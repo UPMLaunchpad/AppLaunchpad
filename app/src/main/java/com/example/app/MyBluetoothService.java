@@ -1,7 +1,5 @@
 package com.example.app;
 
-import android.bluetooth.BluetoothAdapter;
-
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Bundle;
@@ -9,45 +7,30 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.harrysoft.androidbluetoothserial.BluetoothManager;
 import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice;
 import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyBluetoothService {
     private static final String TAG = "MY_APP_DEBUG_TAG";
-    private Handler handler; // handler that gets info from Bluetooth service
-
-private BluetoothManager bluetoothManager;
-private Context cont;
-private String espMAC = "24:62:AB:F3:00:5A";
-private String message;
-
-
-
-
-
-
-
-
-
+    private Handler handler;
+    private BluetoothManager bluetoothManager;
+    private Context cont;
+    private String espMAC = "24:62:AB:F3:00:5A";
+    private String message;
     public void iniciar(BluetoothManager mang, String conf, Context main) {
         bluetoothManager = mang;
         cont = main;
         message = conf;
     this.connectDevice(espMAC);
-
     }
 
     private SimpleBluetoothDeviceInterface deviceInterface;
-
     private void connectDevice(String mac) {
         bluetoothManager.openSerialDevice(mac)
                 .subscribeOn(Schedulers.io())
@@ -56,55 +39,31 @@ private String message;
     }
 
     private void onConnected(BluetoothSerialDevice connectedDevice) {
-        // You are now connected to this device!
-        // Here you may want to retain an instance to your device:
+
         deviceInterface = connectedDevice.toSimpleDeviceInterface();
-
-        // Listen to bluetooth events
         deviceInterface.setListeners(this::onMessageReceived, this::onMessageSent, this::onError);
-
-        // Let's send a message:
-    //    deviceInterface.sendMessage("Hello world!");
         deviceInterface.sendMessage(message);
     }
 
     private void onMessageSent(String message) {
-        // We sent a message! Handle it here.
-        Toast.makeText(cont, "Mensaje enviado", Toast.LENGTH_LONG).show(); // Replace context with your context instance.
+        Toast.makeText(cont, "Mensaje enviado", Toast.LENGTH_LONG).show();
     }
 
     private void onMessageReceived(String message) {
-        // We received a message! Handle it here.
-        Toast.makeText(cont, "Received a message! Message was: " + message, Toast.LENGTH_LONG).show(); // Replace context with your context instance.
+        Toast.makeText(cont, "Se ha recibido un mensaje:" + message, Toast.LENGTH_LONG).show();
     }
 
     private void onError(Throwable error) {
-        // Handle the error
+        Toast.makeText(cont, "Error en el Bluetooth", Toast.LENGTH_LONG).show();
     }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    // Defines several constants used when transmitting messages between the
-    // service and the UI.
     private interface MessageConstants {
         public static final int MESSAGE_READ = 0;
         public static final int MESSAGE_WRITE = 1;
         public static final int MESSAGE_TOAST = 2;
-
-        // ... (Add other message types here as needed.)
     }
 
 
@@ -119,8 +78,6 @@ private String message;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
 
-            // Get the input and output streams; using temp objects because
-            // member streams are final.
             try {
                 tmpIn = socket.getInputStream();
             } catch (IOException e) {
@@ -138,14 +95,12 @@ private String message;
         try
 
         {
-            // Connect to the remote device through the socket. This call blocks
-            // until it succeeds or throws an exception.
+
             mmSocket.connect();
         } catch(
         IOException connectException)
 
         {
-            // Unable to connect; close the socket and return.
             try {
                 mmSocket.close();
             } catch (IOException closeException) {
@@ -158,14 +113,13 @@ private String message;
 
         public void run() {
             mmBuffer = new byte[1024];
-            int numBytes; // bytes returned from read()
+            int numBytes;
 
-            // Keep listening to the InputStream until an exception occurs.
+
             while (true) {
                 try {
-                    // Read from the InputStream.
+
                     numBytes = mmInStream.read(mmBuffer);
-                    // Send the obtained bytes to the UI activity.
                     Message readMsg = handler.obtainMessage(
                             MessageConstants.MESSAGE_READ, numBytes, -1,
                             mmBuffer);
@@ -177,7 +131,6 @@ private String message;
             }
         }
 
-        // Call this from the main activity to send data to the remote device.
         public void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);
@@ -200,7 +153,6 @@ private String message;
             }
         }
 
-        // Call this method from the main activity to shut down the connection.
         public void cancel() {
             try {
                 mmSocket.close();
