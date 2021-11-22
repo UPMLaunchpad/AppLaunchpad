@@ -1,12 +1,9 @@
 package com.example.app;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,10 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Scanner;
-import java.util.UUID;
 import android.widget.Toast;
 import com.harrysoft.androidbluetoothserial.BluetoothManager;
 
@@ -33,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private Button sendF;
     private Button cambiar;
     private Button borrar;
-    private BluetoothSocket btSocket = null;
-    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     private  BluetoothManager bluetoothManager;
     private Context cont;
     private File fich;
@@ -52,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         cambiar = findViewById(R.id.cambiar);
         borrar = findViewById(R.id.borrar);
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(receiver, filter);
         this.solicitarPermisos();
         this.configurarBluetoothSerial();
         this.setUpView();
@@ -168,34 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
-    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
-        return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
-    }
-
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String deviceName = device.getName(); System.out.println(deviceName+ " ");
-                String deviceHardwareAddress = device.getAddress();  System.out.println(deviceHardwareAddress);
-                try {
-                    btSocket = createBluetoothSocket(device);
-                } catch (IOException e) {
-                    Toast.makeText(getBaseContext(), "La creacción del Socket fallo", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    };
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(receiver);
-    }
 
     }

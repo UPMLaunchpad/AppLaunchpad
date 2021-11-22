@@ -11,11 +11,7 @@ import android.widget.Toast;
 
 public class SeleccionBoton extends AppCompatActivity {
 
-
     private ImageButton cuadrante1,cuadrante2,cuadrante3,cuadrante4;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +31,6 @@ public class SeleccionBoton extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Cuadrante 1", Toast.LENGTH_LONG).show();
-              //  Toast.makeText(getApplicationContext(), "The faith is my shield", Toast.LENGTH_LONG).show();
                 nuevaVentana(view,1);
 
             }
@@ -45,7 +40,6 @@ public class SeleccionBoton extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Cuadrante 2", Toast.LENGTH_LONG).show();
-              //  Toast.makeText(getApplicationContext(), "For the emperor", Toast.LENGTH_LONG).show();
                 nuevaVentana(view,2);
             }
 
@@ -54,7 +48,6 @@ public class SeleccionBoton extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Cuadrante 3", Toast.LENGTH_LONG).show();
-            //    Toast.makeText(getApplicationContext(), "Burn the Heretic! Kill the Mutant! Purge the Unclean!", Toast.LENGTH_LONG).show();
                 nuevaVentana(view,3);
             }
 
@@ -63,7 +56,6 @@ public class SeleccionBoton extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Cuadrante 4", Toast.LENGTH_LONG).show();
-            //    Toast.makeText(getApplicationContext(), "The planet broke before the guard did", Toast.LENGTH_LONG).show();
                 nuevaVentana(view,4);
             }
 
