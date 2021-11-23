@@ -1,12 +1,10 @@
 package com.example.app;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -18,16 +16,13 @@ public class NumeroBoton extends AppCompatActivity {
     private int c2[]={5,6,7,8,13,14,15,16,21,22,23,24,29,30,31,32};
     private int c3[]={33,34,35,36,41,42,43,44,49,50,51,52,57,58,59,60};
     private int c4[]={37,38,39,40,45,46,47,48,53,54,55,56,61,62,63,64};
-
     private ImageView cuad;
     private ImageButton boton1,boton2,boton3,boton4,boton5,boton6,boton7,boton8,boton9,boton10,boton11,boton12,boton13,boton14,boton15,boton16;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_numeroboton);
-
         cuad = (ImageView) findViewById(R.id.numeroCuadrante);
         boton1 = (ImageButton) findViewById(R.id.Button1);
         boton2 = (ImageButton) findViewById(R.id.Button2);
@@ -45,15 +40,9 @@ public class NumeroBoton extends AppCompatActivity {
         boton14 = (ImageButton) findViewById(R.id.Button14);
         boton15 = (ImageButton) findViewById(R.id.Button15);
         boton16 = (ImageButton) findViewById(R.id.Button16);
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-
-
         this.obtenerCuadrante();
-  //      System.out.println(cuadrante);
         this.setUpView();
-
     }
 
     private void setUpView() {
@@ -173,8 +162,6 @@ public class NumeroBoton extends AppCompatActivity {
 
         }
 
-
-
         private int numeroBoton(int boton){
         int temp=0;
             switch (cuadrante) {
@@ -200,34 +187,34 @@ public class NumeroBoton extends AppCompatActivity {
         return temp;
         }
 
-public void obtenerCuadrante(){
-    Bundle datos = this.getIntent().getExtras();
-    cuadrante = datos.getInt("Cuadrante");
-    switch (cuadrante) {
-        case 1:
-             cuad.setImageResource(R.drawable.cuadrante1);
-             break;
-        case 2:
-            cuad.setImageResource(R.drawable.cuadrante2);
-            break;
-        case 3:
-            cuad.setImageResource(R.drawable.cuadrante3);
-            break;
-        case 4:
-            cuad.setImageResource(R.drawable.cuadrante4);
-            break;
-        default:
-            cuad.setImageResource(R.drawable.completo);
-            break;
+        public void obtenerCuadrante(){
+            Bundle datos = this.getIntent().getExtras();
+            cuadrante = datos.getInt("Cuadrante");
+            switch (cuadrante) {
+                case 1:
+                     cuad.setImageResource(R.drawable.cuadrante1);
+                    break;
+                case 2:
+                     cuad.setImageResource(R.drawable.cuadrante2);
+                    break;
+                case 3:
+                    cuad.setImageResource(R.drawable.cuadrante3);
+                     break;
+                case 4:
+                    cuad.setImageResource(R.drawable.cuadrante4);
+                    break;
+                default:
+                     cuad.setImageResource(R.drawable.completo);
+                    break;
 
 
     }
 }
 
-    private void nuevaVentana(View view, int x){
-        Intent in = new Intent(this, Boton.class);
-        in.putExtra("Numero", x);
-        startActivity(in);
+        private void nuevaVentana(View view, int x){
+            Intent in = new Intent(this, Boton.class);
+            in.putExtra("Numero", x);
+            startActivity(in);
     }
 
 
