@@ -1,24 +1,18 @@
 package com.example.app;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
 import com.afollestad.materialdialogs.MaterialDialog;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
-
-
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class Boton extends AppCompatActivity {
@@ -32,7 +26,9 @@ public class Boton extends AppCompatActivity {
     private Button colorBoton;
     private Button sonidoBoton;
     private Button efectoBoton;
-    private int numLed[] = {0, 1, 2, 3, 4, 5, 6, 7, 15, 14, 13, 12, 11, 10, 9, 8, 16, 17, 18, 19, 20, 21, 22, 23, 31, 30, 29, 28, 27, 26, 25, 26, 32, 33, 34, 35, 36, 37, 38, 39, 47, 46, 45, 44, 43, 42, 41, 40, 48, 49, 50, 51, 52, 53, 54, 55, 63, 62, 61, 60, 59, 58, 57, 56};
+    private int numLed[] = {0, 1, 2, 3, 4, 5, 6, 7, 15, 14, 13, 12, 11, 10, 9, 8, 16, 17, 18, 19,
+            20, 21, 22, 23, 31, 30, 29, 28, 27, 26, 25, 26, 32, 33, 34, 35, 36, 37, 38, 39, 47, 46,
+            45, 44, 43, 42, 41, 40, 48, 49, 50, 51, 52, 53, 54, 55, 63, 62, 61, 60, 59, 58, 57, 56};
 
 
     @Override
@@ -48,27 +44,21 @@ public class Boton extends AppCompatActivity {
         colorBoton = findViewById(R.id.colorBoton);
         sonidoBoton = findViewById(R.id.sonidoBoton);
         efectoBoton = findViewById(R.id.efectoBoton);
-
         this.obtenerBoton();
         this.setUpView();
-
-
-
     }
-@Override
-public void  onBackPressed(){
-        System.out.println("guardando");
-    try {
+    @Override
+    public void  onBackPressed(){
+        try {
         guardarColor(Integer.toHexString(mDefaultColor));
-    } catch (IOException e) {
+        } catch (IOException e) {
         e.printStackTrace();
-    }
+        }
         finish();
-}
+    }
 
 
     private void setUpView() {
-
 
         colorBoton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +66,6 @@ public void  onBackPressed(){
                     openColorPicker();
 
             }
-
         });
         sonidoBoton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,10 +74,7 @@ public void  onBackPressed(){
                 confgSonido();
 
             }
-
         });
-
-
         efectoBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,8 +85,6 @@ public void  onBackPressed(){
 
         });
     }
-
-
 
 
     private void obtenerBoton() {
@@ -133,7 +117,6 @@ public void  onBackPressed(){
                     }
                 })
                 .show();
-
     }
 
 public void confgSonido (){
@@ -160,12 +143,7 @@ public void confgSonido (){
                 }
             })
             .show();
-
 }
-
-
-
-
     public void openColorPicker() {
         AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(this, mDefaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
@@ -177,11 +155,6 @@ public void confgSonido (){
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 mDefaultColor = color;
                 System.out.println("color:" + mDefaultColor);
-                //   saveFile(getApplicationContext(),Integer.toHexString(mDefaultColor));
-
-
-
-                // mLayout.setBackgroundColor(mDefaultColor);
             }
         });
         colorPicker.show();
@@ -331,10 +304,7 @@ public void confgSonido (){
                 bfwriter.write(temp + "\n");
             }
 
-
-            //escribe los datos en el archivo
             bfwriter.close();
-            //    System.out.println("Archivo modificado satisfactoriamente..");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -349,60 +319,6 @@ public void confgSonido (){
 
             fichero.delete();
             file_temp.renameTo(fichero);
-
-
-        /*//MODIFICAR PARA GUARDAR EN EL MISMO FICHERO
-        //  String datos = etFile.getText().toString();
-    Scanner scanner;
-        String temp = "";
-        FileOutputStream fileOutputStream = null;
-        if (!fichero.exists()) {
-            try {
-                fichero.createNewFile();
-            } catch (IOException e) {
-                Log.e(TAG, "Error statusFile" + e.getMessage());
-            }
-        }
-        FileWriter flwriter = null;
-        scanner = new Scanner(fichero);
-        try {
-            flwriter = new FileWriter(fichero);
-            BufferedWriter bfwriter = new BufferedWriter(flwriter);
-            for(int x=0;x<boton+1;x++){
-                if(x!=(boton)){
-                    if(scanner.hasNextLine()){
-                        temp=scanner.nextLine();
-                        bfwriter.write(temp);
-                    }
-                    else{
-                        bfwriter.newLine();
-                    }
-                }
-                else{
-                    bfwriter.write(led +" "+ datos + "\n");
-                }
-
-            }
-
-
-            //escribe los datos en el archivo
-
-
-            bfwriter.close();
-            //    System.out.println("Archivo modificado satisfactoriamente..");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (flwriter != null) {
-                try {
-                    flwriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
-
 
         }
 

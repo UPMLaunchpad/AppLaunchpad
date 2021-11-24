@@ -180,8 +180,6 @@ public class NumeroBoton extends AppCompatActivity {
                 default:
                     Toast.makeText(getApplicationContext(), "ERROR", Toast.LENGTH_LONG).show();
                     break;
-
-
             }
             Toast.makeText(getApplicationContext(), "Boton "+temp, Toast.LENGTH_LONG).show();
         return temp;
@@ -206,11 +204,8 @@ public class NumeroBoton extends AppCompatActivity {
                 default:
                      cuad.setImageResource(R.drawable.completo);
                     break;
-
-
     }
 }
-
         private void nuevaVentana(View view, int x){
             Intent in = new Intent(this, Boton.class);
             in.putExtra("Numero", x);
