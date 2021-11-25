@@ -190,56 +190,38 @@ public void confgSonido (){
     }
 
     public float[] RGBtoHSL(String Hex) {
-
         float r = 16 * conversor(Hex.charAt(2)) + conversor(Hex.charAt(3));
         float g = 16 * conversor(Hex.charAt(4)) + conversor(Hex.charAt(5));
         float b = 16 * conversor(Hex.charAt(6)) + conversor(Hex.charAt(7));
-
         float[] hsl = new float[3];
-
         for (int i = 0; i < 3; i++) {
             hsl[i] = 0;
         }
-
         r = r / 255;
         g = g / 255;
         b = b / 255;
-
         float cmax = Math.max(r, Math.max(g, b));
         float cmin = Math.min(r, Math.min(g, b));
-
         float dif = cmax - cmin;
-
         if (dif == 0) {
             hsl[0] = 0;
-
         } else if (cmax == r) {
             hsl[0] = ((g - b) / dif) % 6;
-
         } else if (cmax == g) {
             hsl[0] = (b - r) / dif + 2;
-
         } else {
             hsl[0] = (r - g) / dif + 4;
-
         }
-
         hsl[0] = Math.round(hsl[0] * 60);
-
         hsl[2] = dif / 2;
-
         if (hsl[0] < 0) {
             hsl[0] += 360;
         }
-
         if (dif == 0) {
             hsl[1] = 0;
-
         } else {
             hsl[1] = 100 * (dif / (1 - Math.abs(2 * hsl[2] - 1)));
-
         }
-
         hsl[2] *= 100;
 
         return hsl;
@@ -259,25 +241,19 @@ public void confgSonido (){
 
 
     private void saveFile(int led, String color, int son,int efct) throws IOException {
-
         File file_temp = new File(cache, "temp.txt");
-
         if (!file_temp.exists()) {
             file_temp.createNewFile();
         }
-
         if (!fichero.exists()) {
             try {
                 fichero.createNewFile();
             } catch (IOException e) {
                 Log.e(TAG, "Error statusFile" + e.getMessage());
             }
-
         }
         Scanner scanner;
         String temp = "";
-        FileOutputStream fileOutputStream = null;
-
         FileWriter flwriter = null;
         scanner = new Scanner(fichero);
         try {
@@ -293,19 +269,15 @@ public void confgSonido (){
                     bfwriter.write(" \n");
                 }
             }
-
             bfwriter.write(led +","+ son + ","+ efct + color +";"+ "\n");
             if (scanner.hasNextLine()){
                 temp=scanner.nextLine();
             }
-
             while (scanner.hasNextLine()) {
                 temp = scanner.nextLine();
                 bfwriter.write(temp + "\n");
             }
-
             bfwriter.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -316,10 +288,8 @@ public void confgSonido (){
                     e.printStackTrace();
                 }
             }
-
             fichero.delete();
             file_temp.renameTo(fichero);
-
         }
 
     }
